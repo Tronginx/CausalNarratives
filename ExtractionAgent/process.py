@@ -16,11 +16,11 @@ from typing import List, Tuple, Optional, Dict, Set
 import networkx as nx
 from datetime import datetime
 
-from data_types import (
+from .data_types import (
     Node, Edge, NarrativeGraph, NodeType, 
     RelationshipType, NarrativeItem, Position, Prediction
 )
-from chains import NarrativeChains
+from .chains import NarrativeChains
 
 
 # ============================================================================
@@ -625,4 +625,17 @@ def print_graph_summary(graph: NarrativeGraph) -> None:
         print(f'  "{conclusion.content}"')
     
     print(f"{'='*60}\n")
+
+
+def main():
+    path = "/Users/tron/RealTron/UIUC/25Fall/CS546/Project/CausalNarratives/Data/TSMC: A Strong Buy At All-Time Highs"
+    with open(path, "r", encoding="utf-8") as f:
+        text = f.read()
+
+    items = extract_narratives(text)
+    print(f"Found {len(items)} narrative(s)")
+    if items:
+        graph = items[0].narrative_graph
+        concl = graph.get_node(graph.conclusion_id)
+        print(f"Convergence: {graph.convergence_score}, Conclusion: {concl.content if concl else 'N/A'}")
 

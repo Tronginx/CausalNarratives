@@ -5,6 +5,14 @@ This package extracts causal narrative structures from financial analysis texts,
 measuring how well facts converge to support conclusions.
 """
 
+# Load environment variables early so downstream modules (e.g., ChatOpenAI) have access
+try:
+    from dotenv import load_dotenv, find_dotenv
+    load_dotenv(find_dotenv())
+except Exception:
+    # dotenv is optional; ignore if unavailable
+    pass
+
 from .data_types import (
     Node,
     Edge,
@@ -20,7 +28,9 @@ from .data_types import (
 from .graph import (
     extract_narratives,
     extract_single_narrative,
-    batch_extract_narratives
+    batch_extract_narratives,
+    save_narratives_to_json,
+    load_narratives_from_json
 )
 
 from .chains import NarrativeChains, get_chains
@@ -39,6 +49,10 @@ __all__ = [
     "extract_narratives",
     "extract_single_narrative",
     "batch_extract_narratives",
+    
+    # JSON export/import
+    "save_narratives_to_json",
+    "load_narratives_from_json",
     
     # Data types
     "Node",
