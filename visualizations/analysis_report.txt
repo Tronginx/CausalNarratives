@@ -1,0 +1,132 @@
+================================================================================
+NARRATIVE GRAPH ANALYSIS REPORT
+================================================================================
+
+
+================================================================================
+NARRATIVE 1: TSM - LONG
+================================================================================
+
+Convergence Score: 0.804
+Total Nodes: 29
+Total Edges: 34
+Avg Path Length: 1.67
+Max Depth: 2
+
+Node Breakdown:
+  - Assumption: 2
+  - Conclusion: 1
+  - Event: 2
+  - Fact: 18
+  - Opinion: 6
+
+Edge Breakdown:
+  - Conditional: 1
+  - Contradicting: 5
+  - Supporting: 28
+
+Main Conclusion:
+  "I continue to recommend TSMC as a Strong Buy, despite shares of the foundry trading at all-time highs."
+
+Prediction:
+  Direction: up
+  Time Horizon: 30 days
+  Confidence: 0.90
+
+Top Supporting Evidence (showing 5):
+  1. [fact] TSMC delivered strong Q3 results, beating expectations with robust revenue growt...
+  2. [opinion] TSMC continues to expand its gross margins, highlighting pricing strength....
+  3. [opinion] TSMC has one of the most appealing risk profiles....
+  4. [fact] TSMC trades at a significant discount to peers like NVDA and AMD....
+  5. [fact] TSMC raised its 2025 revenue and CapEx guidance amid a booming AI chip market....
+
+Contradicting Evidence:
+  1. [fact] In the third quarter, TSMC generated free cash flow of NT$139.4B, showing a decl...
+  2. [fact] TSMC's free cash flow margin contracted by more than 10 PP year-over-year to 14....
+  3. [assumption] Demand for chips can disappear overnight if companies fear a recession and adjus...
+  4. [assumption] The semiconductor industry is notoriously volatile....
+
+
+================================================================================
+NARRATIVE 2: META - LONG
+================================================================================
+
+Convergence Score: 0.800
+Total Nodes: 23
+Total Edges: 22
+Avg Path Length: 1.00
+Max Depth: 1
+
+Node Breakdown:
+  - Assumption: 3
+  - Conclusion: 1
+  - Fact: 14
+  - Opinion: 5
+
+Edge Breakdown:
+  - Conditional: 4
+  - Contradicting: 2
+  - Supporting: 16
+
+Main Conclusion:
+  "Go long META in the near term as the Arm partnership reinforces its AI roadmap and the constructive technical setup supports further upside toward $758–$780."
+
+Prediction:
+  Direction: up
+  Magnitude: 0.1
+  Time Horizon: 30 days
+  Confidence: 0.80
+
+Top Supporting Evidence (showing 5):
+  1. [fact] The collaboration with Arm Holdings aims at developing energy-efficient chip pla...
+  2. [fact] The partnership with Arm has been received as a sign of long-term commitment to ...
+  3. [fact] The agreement aligns with Meta’s broader AI roadmap, which focuses on delivering...
+  4. [fact] Arm’s expertise in low-power architectures offers potential cost and performance...
+  5. [opinion] Investors view the deal as a strategic step that could strengthen the company’s ...
+
+Contradicting Evidence:
+  1. [fact] Meta has faced a volatile trading month amid market-wide profit-taking in large-...
+  2. [assumption] Failure to hold support levels could expose the stock to renewed selling pressur...
+
+
+================================================================================
+NARRATIVE 3: AVGO - LONG
+================================================================================
+
+Convergence Score: 0.808
+Total Nodes: 22
+Total Edges: 27
+Avg Path Length: 1.22
+Max Depth: 2
+
+Node Breakdown:
+  - Assumption: 5
+  - Conclusion: 1
+  - Event: 1
+  - Fact: 9
+  - Opinion: 6
+
+Edge Breakdown:
+  - Causal: 1
+  - Conditional: 5
+  - Contradicting: 1
+  - Supporting: 20
+
+Main Conclusion:
+  "Broadcom (AVGO) is a buy for long-term investors; positioned at the crossroads of the AI revolution, its expanding AI chip business could continue to drive the stock higher in the months and years to come."
+
+Prediction:
+  Direction: up
+  Time Horizon: 30 days
+  Confidence: 0.70
+
+Top Supporting Evidence (showing 5):
+  1. [fact] Broadcom generated record revenue of $15.9 billion in its fiscal third quarter (...
+  2. [fact] Broadcom's adjusted earnings per share (EPS) was $1.69, which jumped 36%....
+  3. [fact] AI-specific revenue for Broadcom was $5.2 billion, which surged 63%....
+  4. [event] Broadcom will help design and deploy 10 gigawatts of its customizable chips for ...
+  5. [opinion] The deal with OpenAI is likely incremental to Broadcom's already robust guidance...
+
+Contradicting Evidence:
+  1. [fact] Broadcom's dividend yield is 0.01%....
+

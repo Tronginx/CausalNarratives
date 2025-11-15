@@ -1,0 +1,127 @@
+<html>
+    <head>
+        <meta charset="utf-8">
+        
+            <script src="lib/bindings/utils.js"></script>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/dist/vis-network.min.css" integrity="sha512-WgxfT5LWjfszlPHXRmBWHkV2eceiWTOBvrKCNbdgDYTHrT2AeLCGbF4sZlZw3UMN3WtL0tGUoIAKsu8mllg/XA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/vis-network/9.1.2/dist/vis-network.min.js" integrity="sha512-LnvoEWDFrqGHlHmDD2101OrLcbsfkrzoSpvtSQtxK3RMnRV0eOkhhBN2dXHKRrUU8p2DGRTk35n4O8nWSVe1mQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+            
+        
+<center>
+<h1>TSM - LONG (Convergence: 0.804)</h1>
+</center>
+
+<!-- <link rel="stylesheet" href="../node_modules/vis/dist/vis.min.css" type="text/css" />
+<script type="text/javascript" src="../node_modules/vis/dist/vis.js"> </script>-->
+        <link
+          href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6"
+          crossorigin="anonymous"
+        />
+        <script
+          src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js"
+          integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf"
+          crossorigin="anonymous"
+        ></script>
+
+
+        <center>
+          <h1>TSM - LONG (Convergence: 0.804)</h1>
+        </center>
+        <style type="text/css">
+
+             #mynetwork {
+                 width: 100%;
+                 height: 900px;
+                 background-color: #ffffff;
+                 border: 1px solid lightgray;
+                 position: relative;
+                 float: left;
+             }
+
+             
+
+             
+
+             
+        </style>
+    </head>
+
+
+    <body>
+        <div class="card" style="width: 100%">
+            
+            
+            <div id="mynetwork" class="card-body"></div>
+        </div>
+
+        
+        
+
+        <script type="text/javascript">
+
+              // initialize global variables.
+              var edges;
+              var nodes;
+              var allNodes;
+              var allEdges;
+              var nodeColors;
+              var originalNodes;
+              var network;
+              var container;
+              var options, data;
+              var filter = {
+                  item : '',
+                  property : '',
+                  value : []
+              };
+
+              
+
+              
+
+              // This method is responsible for drawing the graph, returns the drawn network
+              function drawGraph() {
+                  var container = document.getElementById('mynetwork');
+
+                  
+
+                  // parsing and collecting nodes and edges from the python
+                  nodes = new vis.DataSet([{"color": "#4A90E2", "font": {"color": "#000000"}, "id": "fact_1", "label": "fact_1", "shape": "dot", "size": 20, "title": "\u003cb\u003eFACT\u003c/b\u003e\u003cbr\u003eTSMC delivered strong Q3 results, beating expectations with robust revenue growth and expanding gross margins."}, {"color": "#4A90E2", "font": {"color": "#000000"}, "id": "fact_2", "label": "fact_2", "shape": "dot", "size": 20, "title": "\u003cb\u003eFACT\u003c/b\u003e\u003cbr\u003eTSMC dominates the foundry market with over 70% share."}, {"color": "#4A90E2", "font": {"color": "#000000"}, "id": "fact_3", "label": "fact_3", "shape": "dot", "size": 20, "title": "\u003cb\u003eFACT\u003c/b\u003e\u003cbr\u003eTSMC raised its 2025 revenue and CapEx guidance amid a booming AI chip market."}, {"color": "#4A90E2", "font": {"color": "#000000"}, "id": "fact_4", "label": "fact_4", "shape": "dot", "size": 20, "title": "\u003cb\u003eFACT\u003c/b\u003e\u003cbr\u003eTSMC trades at a significant discount to peers like NVDA and AMD."}, {"color": "#4A90E2", "font": {"color": "#000000"}, "id": "fact_5", "label": "fact_5", "shape": "dot", "size": 20, "title": "\u003cb\u003eFACT\u003c/b\u003e\u003cbr\u003eTSMC had GAAP earnings of $2.92 per-share, beating the consensus estimate by $0.32 per-share."}, {"color": "#4A90E2", "font": {"color": "#000000"}, "id": "fact_6", "label": "fact_6", "shape": "dot", "size": 20, "title": "\u003cb\u003eFACT\u003c/b\u003e\u003cbr\u003eThe top line came in at $33.1B and was $1.5B better than the average prediction."}, {"color": "#4A90E2", "font": {"color": "#000000"}, "id": "fact_7", "label": "fact_7", "shape": "dot", "size": 20, "title": "\u003cb\u003eFACT\u003c/b\u003e\u003cbr\u003eIn the third fiscal quarter, TSMC generated $33.1B in net revenue, showing a massive 41% year-over-year growth rate."}, {"color": "#4A90E2", "font": {"color": "#000000"}, "id": "fact_8", "label": "fact_8", "shape": "dot", "size": 20, "title": "\u003cb\u003eFACT\u003c/b\u003e\u003cbr\u003eTSMC\u2019s revenue growth has soared in recent quarters, especially in the last two years."}, {"color": "#4A90E2", "font": {"color": "#000000"}, "id": "fact_9", "label": "fact_9", "shape": "dot", "size": 20, "title": "\u003cb\u003eFACT\u003c/b\u003e\u003cbr\u003eIn Q3 \u201925, TSMC had a gross margin of 59.5%, showing a 0.9 PP margin gain compared to the previous quarter."}, {"color": "#4A90E2", "font": {"color": "#000000"}, "id": "fact_10", "label": "fact_10", "shape": "dot", "size": 20, "title": "\u003cb\u003eFACT\u003c/b\u003e\u003cbr\u003eTSMC\u2019s income grew a massive 39.0% year-over-year."}, {"color": "#4A90E2", "font": {"color": "#000000"}, "id": "fact_11", "label": "fact_11", "shape": "dot", "size": 20, "title": "\u003cb\u003eFACT\u003c/b\u003e\u003cbr\u003eTSMC had a market share of ~71% according to Counterpoint Research."}, {"color": "#4A90E2", "font": {"color": "#000000"}, "id": "fact_12", "label": "fact_12", "shape": "dot", "size": 20, "title": "\u003cb\u003eFACT\u003c/b\u003e\u003cbr\u003eTSMC is targeting $165B in investments in the U.S. to build domestic chip manufacturing capacities."}, {"color": "#4A90E2", "font": {"color": "#000000"}, "id": "fact_13", "label": "fact_13", "shape": "dot", "size": 20, "title": "\u003cb\u003eFACT\u003c/b\u003e\u003cbr\u003eIn the third quarter, TSMC generated free cash flow of NT$139.4B, showing a decline rate of 25% year-over-year."}, {"color": "#4A90E2", "font": {"color": "#000000"}, "id": "fact_14", "label": "fact_14", "shape": "dot", "size": 20, "title": "\u003cb\u003eFACT\u003c/b\u003e\u003cbr\u003eTSMC\u0027s free cash flow margin contracted by more than 10 PP year-over-year to 14.1%."}, {"color": "#4A90E2", "font": {"color": "#000000"}, "id": "fact_15", "label": "fact_15", "shape": "dot", "size": 20, "title": "\u003cb\u003eFACT\u003c/b\u003e\u003cbr\u003eTSMC trades at a forward price-to-revenue ratio of 26.1X."}, {"color": "#4A90E2", "font": {"color": "#000000"}, "id": "fact_16", "label": "fact_16", "shape": "dot", "size": 20, "title": "\u003cb\u003eFACT\u003c/b\u003e\u003cbr\u003eShares of Nvidia and AMD are trading at earnings multipliers of 28.3X and 37.3X respectively."}, {"color": "#4A90E2", "font": {"color": "#000000"}, "id": "fact_17", "label": "fact_17", "shape": "dot", "size": 20, "title": "\u003cb\u003eFACT\u003c/b\u003e\u003cbr\u003eTSMC expects to spend between $40-42B on capital investments this year."}, {"color": "#4A90E2", "font": {"color": "#000000"}, "id": "fact_18", "label": "fact_18", "shape": "dot", "size": 20, "title": "\u003cb\u003eFACT\u003c/b\u003e\u003cbr\u003eTSMC\u0027s revenue guidance for FY 2025 implies 35% year-over-year growth."}, {"color": "#F5A623", "font": {"color": "#000000"}, "id": "event_1", "label": "event_1", "shape": "dot", "size": 20, "title": "\u003cb\u003eEVENT\u003c/b\u003e\u003cbr\u003eTSMC submitted a strong earnings sheet for the third fiscal quarter."}, {"color": "#F5A623", "font": {"color": "#000000"}, "id": "event_2", "label": "event_2", "shape": "dot", "size": 20, "title": "\u003cb\u003eEVENT\u003c/b\u003e\u003cbr\u003eNvidia is projecting that CapEx spending in the Data Center market is set to grow to $3-4 trillion by the end of the decade."}, {"color": "#7ED321", "font": {"color": "#000000"}, "id": "opinion_1", "label": "opinion_1", "shape": "dot", "size": 20, "title": "\u003cb\u003eOPINION\u003c/b\u003e\u003cbr\u003eI continue to recommend TSMC as a Strong Buy, despite shares of the foundry trading at all-time highs."}, {"color": "#7ED321", "font": {"color": "#000000"}, "id": "opinion_2", "label": "opinion_2", "shape": "dot", "size": 20, "title": "\u003cb\u003eOPINION\u003c/b\u003e\u003cbr\u003eI see a favorable risk profile amid a massive market share in the foundry industry."}, {"color": "#7ED321", "font": {"color": "#000000"}, "id": "opinion_3", "label": "opinion_3", "shape": "dot", "size": 20, "title": "\u003cb\u003eOPINION\u003c/b\u003e\u003cbr\u003eTSMC continues to expand its gross margins, highlighting pricing strength."}, {"color": "#7ED321", "font": {"color": "#000000"}, "id": "opinion_4", "label": "opinion_4", "shape": "dot", "size": 20, "title": "\u003cb\u003eOPINION\u003c/b\u003e\u003cbr\u003eI see continual upside revaluation momentum if current CapEx trends last."}, {"color": "#7ED321", "font": {"color": "#000000"}, "id": "opinion_5", "label": "opinion_5", "shape": "dot", "size": 20, "title": "\u003cb\u003eOPINION\u003c/b\u003e\u003cbr\u003eTSMC is well positioned to benefit from increases in capital spending in the Data Center industry."}, {"color": "#7ED321", "font": {"color": "#000000"}, "id": "opinion_6", "label": "opinion_6", "shape": "dot", "size": 20, "title": "\u003cb\u003eOPINION\u003c/b\u003e\u003cbr\u003eTSMC has one of the most appealing risk profiles."}, {"color": "#BD10E0", "font": {"color": "#000000"}, "id": "assumption_1", "label": "assumption_1", "shape": "dot", "size": 20, "title": "\u003cb\u003eASSUMPTION\u003c/b\u003e\u003cbr\u003eDemand for chips can disappear overnight if companies fear a recession and adjust their CapEx levels in expectations of slowing demand."}, {"color": "#BD10E0", "font": {"color": "#000000"}, "id": "assumption_2", "label": "assumption_2", "shape": "dot", "size": 20, "title": "\u003cb\u003eASSUMPTION\u003c/b\u003e\u003cbr\u003eThe semiconductor industry is notoriously volatile."}, {"color": "#D0021B", "font": {"color": "#000000"}, "id": "conclusion_main", "label": "conclusion_main", "shape": "dot", "size": 30, "title": "\u003cb\u003eCONCLUSION\u003c/b\u003e\u003cbr\u003eI continue to recommend TSMC as a Strong Buy, despite shares of the foundry trading at all-time highs."}]);
+                  edges = new vis.DataSet([{"arrows": "to", "color": "#7ED321", "from": "fact_5", "title": "supporting: EPS beat substantiates that Q3 results were strong and beat expectations.", "to": "fact_1", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "fact_6", "title": "supporting: Revenue beat supports characterization of strong Q3 results.", "to": "fact_1", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "fact_7", "title": "supporting: Large YoY revenue growth supports strong Q3 performance.", "to": "fact_1", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "fact_8", "title": "supporting: Recent acceleration in revenue growth supports strong quarterly performance.", "to": "fact_1", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "fact_9", "title": "supporting: Gross margin expansion supports strong Q3 results.", "to": "fact_1", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "fact_10", "title": "supporting: Income growth corroborates strong quarterly results.", "to": "fact_1", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "fact_1", "title": "supporting: Strong Q3 results support maintaining a Strong Buy rating.", "to": "conclusion_main", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "fact_9", "title": "supporting: Gross margin expansion supports the view that pricing strength continues.", "to": "opinion_3", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "opinion_3", "title": "supporting: Pricing strength and margin expansion support the Strong Buy thesis.", "to": "conclusion_main", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "fact_2", "title": "supporting: Dominant market share supports a favorable risk profile.", "to": "opinion_2", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "fact_11", "title": "supporting: 71% market share evidence supports favorable risk profile assessment.", "to": "opinion_2", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "opinion_2", "title": "supporting: A favorable risk profile underpins the view that TSMC has one of the most appealing risk profiles.", "to": "opinion_6", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "opinion_6", "title": "supporting: Appealing risk profile supports a Strong Buy recommendation.", "to": "conclusion_main", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "fact_4", "title": "supporting: Valuation discount versus peers supports Strong Buy.", "to": "conclusion_main", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "fact_16", "title": "supporting: Higher peer earnings multiples support the claim that TSMC trades at a discount.", "to": "fact_4", "width": 1.5}, {"arrows": "to", "color": "#D0021B", "from": "fact_15", "title": "contradicting: High forward price-to-revenue multiple may contradict the discount-to-peers claim.", "to": "fact_4", "width": 1}, {"arrows": "to", "color": "#7ED321", "from": "fact_3", "title": "supporting: Raised 2025 revenue and CapEx guidance amid AI boom supports Strong Buy.", "to": "conclusion_main", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "fact_18", "title": "supporting: 35% YoY revenue growth guidance substantiates raised outlook.", "to": "fact_3", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "fact_12", "title": "supporting: Large U.S. investment plan builds capacity, supporting positioning to benefit from rising DC CapEx.", "to": "opinion_5", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "fact_17", "title": "supporting: Significant CapEx spend supports capacity/readiness to capture DC demand.", "to": "opinion_5", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "event_2", "title": "supporting: Projected surge in DC CapEx supports that TSMC is well positioned to benefit.", "to": "opinion_5", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "opinion_5", "title": "supporting: Positioning to benefit from DC CapEx supports Strong Buy.", "to": "conclusion_main", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "event_2", "title": "supporting: Expected ongoing DC CapEx growth supports potential for continued upside revaluation.", "to": "opinion_4", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "fact_17", "title": "supporting: Current high CapEx trend supports the view of continued upside revaluation if it lasts.", "to": "opinion_4", "width": 1.5}, {"arrows": "to", "color": "#F5A623", "from": "opinion_4", "title": "conditional: If current CapEx trends last, there is continual upside revaluation momentum supporting Strong Buy.", "to": "conclusion_main", "width": 1}, {"arrows": "to", "color": "#D0021B", "from": "fact_13", "title": "contradicting: Declining free cash flow undermines the Strength of the Strong Buy thesis.", "to": "conclusion_main", "width": 1}, {"arrows": "to", "color": "#D0021B", "from": "fact_14", "title": "contradicting: Free cash flow margin contraction weakens the Strong Buy case.", "to": "conclusion_main", "width": 1}, {"arrows": "to", "color": "#D0021B", "from": "assumption_1", "title": "contradicting: If recession fears cut CapEx, chip demand could drop, challenging the Strong Buy view.", "to": "conclusion_main", "width": 1}, {"arrows": "to", "color": "#D0021B", "from": "assumption_2", "title": "contradicting: Industry volatility increases uncertainty, weakening the Strong Buy conviction.", "to": "conclusion_main", "width": 1}, {"arrows": "to", "color": "#7ED321", "from": "event_1", "title": "supporting: Submission of a strong earnings sheet supports maintaining a Strong Buy.", "to": "conclusion_main", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "fact_3", "title": "supporting: Raised outlook amid AI tailwinds supports being well positioned for DC spending increases.", "to": "opinion_5", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "fact_18", "title": "supporting: Implied 35% FY25 revenue growth supports Strong Buy.", "to": "conclusion_main", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "fact_2", "title": "supporting: Dominant market share supports the claim of an appealing risk profile.", "to": "opinion_6", "width": 1.5}, {"arrows": "to", "color": "#7ED321", "from": "fact_11", "title": "supporting: Measured 71% share supports the view that TSMC has an appealing risk profile.", "to": "opinion_6", "width": 1.5}]);
+
+                  nodeColors = {};
+                  allNodes = nodes.get({ returnType: "Object" });
+                  for (nodeId in allNodes) {
+                    nodeColors[nodeId] = allNodes[nodeId].color;
+                  }
+                  allEdges = edges.get({ returnType: "Object" });
+                  // adding nodes and edges to the graph
+                  data = {nodes: nodes, edges: edges};
+
+                  var options = {"physics": {"enabled": true, "barnesHut": {"gravitationalConstant": -8000, "centralGravity": 0.3, "springLength": 200, "springConstant": 0.04, "damping": 0.09}, "stabilization": {"enabled": true, "iterations": 1000}}, "nodes": {"font": {"size": 14}}, "edges": {"arrows": {"to": {"enabled": true, "scaleFactor": 0.5}}, "smooth": {"type": "continuous"}}};
+
+                  
+
+
+                  
+
+                  network = new vis.Network(container, data, options);
+
+                  
+
+                  
+
+                  
+
+
+                  
+
+                  return network;
+
+              }
+              drawGraph();
+        </script>
+    </body>
+</html>
