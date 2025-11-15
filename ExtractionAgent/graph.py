@@ -24,10 +24,10 @@ from datetime import datetime
 
 from langgraph.graph import StateGraph, END
 
-from .data_types import NarrativeItem, NarrativeGraph, Node, Edge, Position, Prediction
+from .data_types import NarrativeItem, NarrativeGraph, Node, Edge, Position, Prediction, ExtractionConfig
 from .process import (
     process_extract_metadata,
-    process_extract_conclusions,
+    process_extract_conclusion,
     process_extract_nodes,
     process_extract_edges,
     process_build_narrative_graph,
@@ -49,24 +49,23 @@ class ExtractionState(TypedDict):
     """
     # ===== INPUT =====
     source_text: str  # Original financial analysis text
+    config: ExtractionConfig  # Configuration with safety limits
     
     # ===== METADATA =====
     ticker: str  # Stock ticker symbol
     position: Position  # Investment stance (long/short/neutral)
     
-    # ===== CONCLUSIONS =====
-    conclusions: List[Node]  # All conclusions found in text
-    current_conclusion_idx: int  # Index of conclusion being processed
-    current_conclusion: Node  # Current conclusion being analyzed
+    # ===== CONCLUSION =====
+    conclusion: Optional[Node]  # The single main conclusion
     
-    # ===== PER-CONCLUSION EXTRACTION =====
-    raw_nodes: List[Node]  # Extracted nodes for current conclusion
-    raw_edges: List[Edge]  # Extracted edges for current conclusion
-    narrative_graph: NarrativeGraph  # Constructed graph for current conclusion
-    prediction: Prediction  # Price prediction for current conclusion
+    # ===== EXTRACTION =====
+    raw_nodes: List[Node]  # Extracted nodes for the narrative
+    raw_edges: List[Edge]  # Extracted edges for the narrative
+    narrative_graph: Optional[NarrativeGraph]  # Constructed graph
+    prediction: Optional[Prediction]  # Price prediction
     
-    # ===== OUTPUTS =====
-    narrative_items: Annotated[List[NarrativeItem], add]  # Final results
+    # ===== OUTPUT =====
+    narrative_item: Optional[NarrativeItem]  # Final result
     
     # ===== ERROR HANDLING =====
     errors: Annotated[List[str], add]  # Accumulated errors
@@ -83,15 +82,18 @@ def extract_metadata_node(state: ExtractionState) -> dict:
     
     Thin wrapper that delegates to process_extract_metadata()
     """
+    print(f"📍 [NODE] extract_metadata: starting")
     ticker, position, error = process_extract_metadata(state['source_text'])
     
     if error:
+        print(f"❌ [ERROR] extract_metadata failed: {error}")
         return {
             'ticker': ticker,
             'position': position,
             'errors': [error]
         }
     
+    print(f"✅ [SUCCESS] extract_metadata: {ticker} ({position.value})")
     return {
         'ticker': ticker,
         'position': position,
@@ -99,59 +101,53 @@ def extract_metadata_node(state: ExtractionState) -> dict:
     }
 
 
-def extract_conclusions_node(state: ExtractionState) -> dict:
+def extract_conclusion_node(state: ExtractionState) -> dict:
     """
-    Workflow Node 2: Identify ALL conclusion statements
+    Workflow Node 2: Identify the MAIN conclusion statement
     
-    Each conclusion will be processed separately to create individual NarrativeItems.
-    Thin wrapper that delegates to process_extract_conclusions()
+    Extracts the single primary investment thesis/recommendation.
+    Thin wrapper that delegates to process_extract_conclusion()
     """
-    conclusions, error = process_extract_conclusions(state['source_text'])
+    print(f"📍 [NODE] extract_conclusion: starting")
+    ticker = state['ticker']
+    position = state['position']
+    
+    conclusion, error = process_extract_conclusion(state['source_text'], ticker, position)
     
     if error:
+        print(f"❌ [ERROR] extract_conclusion failed: {error}")
         return {
-            'conclusions': conclusions,
-            'current_conclusion_idx': 0,
+            'conclusion': None,
             'errors': [error]
         }
     
+    print(f"✅ [SUCCESS] extract_conclusion: \"{conclusion.content[:80]}...\"")
     return {
-        'conclusions': conclusions,
-        'current_conclusion_idx': 0,
-        'messages': [f"Found {len(conclusions)} conclusion(s)"]
+        'conclusion': conclusion,
+        'messages': [f"Found main conclusion: \"{conclusion.content[:80]}...\""]
     }
 
 
-def set_current_conclusion_node(state: ExtractionState) -> dict:
-    """
-    Node 3: Set the current conclusion to process
-    
-    This node prepares the state for processing the next conclusion.
-    """
-    idx = state['current_conclusion_idx']
-    conclusions = state['conclusions']
-    
-    print(f"📍 [NODE] set_current_conclusion: idx={idx}, total_conclusions={len(conclusions)}")
-    
-    if idx < len(conclusions):
-        current = conclusions[idx]
-        return {
-            'current_conclusion': current,
-            'messages': [f"Processing conclusion {idx+1}/{len(conclusions)}: \"{current.content}\""]
-        }
-    else:
-        return {}
 
 
 def extract_nodes_node(state: ExtractionState) -> dict:
     """
-    Workflow Node 4: Extract nodes (facts, events, opinions, assumptions)
+    Workflow Node 3: Extract nodes (facts, events, opinions, assumptions)
     
     Thin wrapper that delegates to process_extract_nodes()
     """
     print(f"📍 [NODE] extract_nodes: starting")
-    current_conclusion = state['current_conclusion']
-    all_nodes, error = process_extract_nodes(state['source_text'], current_conclusion)
+    conclusion = state['conclusion']
+    config = state.get('config', ExtractionConfig())
+    
+    if not conclusion:
+        print(f"❌ [ERROR] No conclusion to extract nodes for")
+        return {
+            'raw_nodes': [],
+            'errors': ["Cannot extract nodes without a conclusion"]
+        }
+    
+    all_nodes, error = process_extract_nodes(state['source_text'], conclusion, config)
     
     if error:
         print(f"❌ [ERROR] extract_nodes failed: {error}")
@@ -169,15 +165,16 @@ def extract_nodes_node(state: ExtractionState) -> dict:
 
 def extract_edges_node(state: ExtractionState) -> dict:
     """
-    Workflow Node 5: Extract causal and logical relationships between nodes
+    Workflow Node 4: Extract causal and logical relationships between nodes
     
     Thin wrapper that delegates to process_extract_edges()
     """
     print(f"📍 [NODE] extract_edges: starting")
     nodes = state['raw_nodes']
-    conclusion = state['current_conclusion']
+    conclusion = state['conclusion']
+    config = state.get('config', ExtractionConfig())
     
-    edges, error = process_extract_edges(nodes, conclusion, state['source_text'])
+    edges, error = process_extract_edges(nodes, conclusion, state['source_text'], config)
     
     if error:
         print(f"❌ [ERROR] extract_edges failed: {error}")
@@ -195,22 +192,33 @@ def extract_edges_node(state: ExtractionState) -> dict:
 
 def build_narrative_graph_node(state: ExtractionState) -> dict:
     """
-    Workflow Node 6: Build and validate the NarrativeGraph
+    Workflow Node 5: Build and validate the NarrativeGraph
     
     Thin wrapper that delegates to process_build_narrative_graph()
     """
     print(f"📍 [NODE] build_narrative_graph: starting")
     nodes = state['raw_nodes']
     edges = state['raw_edges']
-    conclusion = state['current_conclusion']
+    conclusion = state['conclusion']
+    config = state.get('config', ExtractionConfig())
     
-    graph, errors = process_build_narrative_graph(nodes, edges, conclusion)
+    graph, errors = process_build_narrative_graph(nodes, edges, conclusion, config)
     
-    if errors:
+    if errors and graph is None:
         print(f"❌ [ERROR] build_narrative_graph failed: {errors}")
         return {
+            'narrative_graph': None,
             'errors': errors,
             'messages': ["Graph validation failed"]
+        }
+    
+    # Graph was created but may have warnings
+    if errors:
+        print(f"✅ [SUCCESS] build_narrative_graph: convergence={graph.convergence_score:.3f} (with warnings)")
+        return {
+            'narrative_graph': graph,
+            'errors': errors,
+            'messages': [f"Built narrative graph (convergence: {graph.convergence_score:.3f}) with warnings"]
         }
     
     print(f"✅ [SUCCESS] build_narrative_graph: convergence={graph.convergence_score:.3f}")
@@ -222,50 +230,44 @@ def build_narrative_graph_node(state: ExtractionState) -> dict:
 
 def extract_prediction_node(state: ExtractionState) -> dict:
     """
-    Workflow Node 7: Extract price prediction from the analysis
+    Workflow Node 6: Extract price prediction from the analysis
     
     Thin wrapper that delegates to process_extract_prediction()
     """
     print(f"📍 [NODE] extract_prediction: starting")
-    conclusion = state['current_conclusion']
+    conclusion = state['conclusion']
     position = state['position']
     
     prediction, error = process_extract_prediction(state['source_text'], conclusion, position)
     
-    result = {}
     if error:
         print(f"❌ [ERROR] extract_prediction failed: {error}")
-        result = {
+        return {
             'prediction': prediction,
             'errors': [error]
         }
-    else:
-        print(f"✅ [SUCCESS] extract_prediction: {prediction.direction} ({prediction.confidence:.2f})")
-        result = {
-            'prediction': prediction,
-            'messages': [f"Extracted prediction: {prediction.direction} ({prediction.confidence:.2f} confidence)"]
-        }
     
-    print(f"🔄 [STATE UPDATE] extract_prediction returning: {list(result.keys())}")
-    return result
+    print(f"✅ [SUCCESS] extract_prediction: {prediction.direction} ({prediction.confidence:.2f})")
+    return {
+        'prediction': prediction,
+        'messages': [f"Extracted prediction: {prediction.direction} ({prediction.confidence:.2f} confidence)"]
+    }
 
 
 def create_narrative_item_node(state: ExtractionState) -> dict:
     """
-    Workflow Node 8: Create the final NarrativeItem
+    Workflow Node 7: Create the final NarrativeItem
     
     Thin wrapper that delegates to process_create_narrative_item()
     """
-    current_idx = state['current_conclusion_idx']
-    print(f"📍 [NODE] create_narrative_item: current_idx={current_idx}")
+    print(f"📍 [NODE] create_narrative_item: starting")
     
     # Skip if graph failed to build
     if state.get('narrative_graph') is None:
-        new_idx = current_idx + 1
-        print(f"⚠️  [WARNING] Skipping conclusion {current_idx + 1}: narrative_graph is None. Incrementing idx {current_idx} -> {new_idx}")
+        print(f"⚠️  [WARNING] Cannot create item: narrative_graph is None")
         return {
-            'current_conclusion_idx': new_idx,
-            'errors': [f"Skipping conclusion {current_idx + 1}: narrative graph failed to build"]
+            'narrative_item': None,
+            'errors': ["Cannot create narrative item: graph failed to build"]
         }
     
     item, error = process_create_narrative_item(
@@ -276,45 +278,23 @@ def create_narrative_item_node(state: ExtractionState) -> dict:
         prediction=state['prediction']
     )
     
-    new_idx = current_idx + 1
-    
     if error:
-        print(f"❌ [ERROR] Failed to create item for conclusion {current_idx + 1}: {error}. Incrementing idx {current_idx} -> {new_idx}")
+        print(f"❌ [ERROR] Failed to create item: {error}")
         return {
-            'current_conclusion_idx': new_idx,
+            'narrative_item': None,
             'errors': [error]
         }
     
-    print(f"✅ [SUCCESS] Created item for conclusion {current_idx + 1}. Incrementing idx {current_idx} -> {new_idx}")
+    print(f"✅ [SUCCESS] Created narrative item")
     return {
-        'narrative_items': [item],
-        'current_conclusion_idx': new_idx,
-        'messages': [f"Created NarrativeItem for conclusion {current_idx + 1}"]
+        'narrative_item': item,
+        'messages': ["Created NarrativeItem successfully"]
     }
 
 
 # ============================================================================
-# CONDITIONAL EDGES
+# No conditional edges needed - linear workflow
 # ============================================================================
-
-def should_continue_processing(state: ExtractionState) -> Literal["continue", "end"]:
-    """
-    Conditional edge: Check if more conclusions to process
-    
-    Returns:
-        "continue" if there are more conclusions to process
-        "end" if all conclusions have been processed
-    """
-    idx = state.get('current_conclusion_idx', 0)
-    conclusions = state.get('conclusions', [])
-    
-    decision = "continue" if idx < len(conclusions) else "end"
-    print(f"🔀 [DECISION] should_continue_processing: idx={idx}, total_conclusions={len(conclusions)}, decision={decision}")
-    
-    if idx < len(conclusions):
-        return "continue"
-    else:
-        return "end"
 
 
 # ============================================================================
@@ -325,17 +305,14 @@ def build_extraction_graph() -> StateGraph:
     """
     Build the complete LangGraph workflow for narrative extraction
     
-    Workflow:
+    Workflow (SINGLE GRAPH - NO LOOP):
     1. Extract metadata (ticker, position)
-    2. Extract all conclusions
-    3. For each conclusion:
-       a. Set as current conclusion
-       b. Extract nodes (facts, events, etc.)
-       c. Extract edges (relationships)
-       d. Build narrative graph with metrics
-       e. Extract prediction
-       f. Create NarrativeItem
-    4. Return all NarrativeItems
+    2. Extract THE main conclusion
+    3. Extract ALL nodes (facts, events, opinions) from entire text
+    4. Extract ALL edges showing relationships
+    5. Build ONE unified narrative graph
+    6. Extract prediction
+    7. Create NarrativeItem
     
     Returns:
         Compiled StateGraph ready for execution
@@ -343,46 +320,24 @@ def build_extraction_graph() -> StateGraph:
     # Initialize graph
     workflow = StateGraph(ExtractionState)
     
-    # Add all processing nodes
+    # Add all processing nodes (linear flow)
     workflow.add_node("extract_metadata", extract_metadata_node)
-    workflow.add_node("extract_conclusions", extract_conclusions_node)
-    workflow.add_node("set_current_conclusion", set_current_conclusion_node)
+    workflow.add_node("extract_conclusion", extract_conclusion_node)
     workflow.add_node("extract_nodes", extract_nodes_node)
     workflow.add_node("extract_edges", extract_edges_node)
     workflow.add_node("build_graph", build_narrative_graph_node)
     workflow.add_node("extract_prediction", extract_prediction_node)
     workflow.add_node("create_item", create_narrative_item_node)
     
-    # Define the flow
+    # Define LINEAR flow - no loops
     workflow.set_entry_point("extract_metadata")
-    workflow.add_edge("extract_metadata", "extract_conclusions")
-    
-    # Conditional: check if we have conclusions to process
-    workflow.add_conditional_edges(
-        "extract_conclusions",
-        should_continue_processing,
-        {
-            "continue": "set_current_conclusion",
-            "end": END
-        }
-    )
-    
-    # Linear flow for processing each conclusion
-    workflow.add_edge("set_current_conclusion", "extract_nodes")
+    workflow.add_edge("extract_metadata", "extract_conclusion")
+    workflow.add_edge("extract_conclusion", "extract_nodes")
     workflow.add_edge("extract_nodes", "extract_edges")
     workflow.add_edge("extract_edges", "build_graph")
     workflow.add_edge("build_graph", "extract_prediction")
     workflow.add_edge("extract_prediction", "create_item")
-    
-    # After creating item, check if more conclusions to process
-    workflow.add_conditional_edges(
-        "create_item",
-        should_continue_processing,
-        {
-            "continue": "set_current_conclusion",
-            "end": END
-        }
-    )
+    workflow.add_edge("create_item", END)
     
     # Compile the graph
     return workflow.compile()
@@ -394,54 +349,59 @@ def build_extraction_graph() -> StateGraph:
 
 def extract_narratives(
     source_text: str, 
+    config: ExtractionConfig = None,
     save_json: bool = False,
-    json_output_path: Optional[str] = None,
-    separate_files: bool = False
-) -> List[NarrativeItem]:
+    json_output_path: Optional[str] = None
+) -> Optional[NarrativeItem]:
     """
-    Main entry point: Extract all narrative items from financial analysis text
+    Main entry point: Extract a narrative from financial analysis text
     
     This function:
     1. Creates the LangGraph workflow
-    2. Initializes the state with the source text
+    2. Initializes the state with the source text and config
     3. Executes the workflow
-    4. Returns the extracted NarrativeItem(s)
-    5. Optionally saves results to JSON
+    4. Returns the extracted NarrativeItem
+    5. Optionally saves result to JSON
     
     Args:
         source_text: The financial analysis text to process
-        save_json: If True, automatically save results to JSON file(s)
-        json_output_path: Path for JSON output (default: output/narratives_TIMESTAMP.json)
-        separate_files: If True, save each narrative to a separate JSON file
+        config: Extraction configuration with safety limits (default: ExtractionConfig())
+        save_json: If True, automatically save result to JSON file
+        json_output_path: Path for JSON output (default: output/narrative_TIMESTAMP.json)
         
     Returns:
-        List of NarrativeItem objects (one per conclusion found)
+        Single NarrativeItem object, or None if extraction failed
         
     Example:
-        >>> text = "TSMC reported 20% revenue growth. The company is undervalued."
-        >>> items = extract_narratives(text)
-        >>> print(f"Found {len(items)} narrative(s)")
-        >>> print(f"Convergence score: {items[0].narrative_graph.convergence_score}")
+        >>> text = "TSMC reported 20% revenue growth. I recommend buying."
+        >>> item = extract_narratives(text)
+        >>> print(f"Convergence score: {item.narrative_graph.convergence_score}")
+        
+        >>> # With safety limits disabled
+        >>> config = ExtractionConfig(enable_safety_limits=False)
+        >>> item = extract_narratives(text, config=config)
         
         >>> # With automatic JSON saving
-        >>> items = extract_narratives(text, save_json=True, json_output_path="output/tsmc.json")
+        >>> item = extract_narratives(text, save_json=True, json_output_path="output/tsmc.json")
     """
+    if config is None:
+        config = ExtractionConfig()
+    
     # Build the graph
     graph = build_extraction_graph()
     
     # Initialize state
     initial_state = ExtractionState(
         source_text=source_text,
+        config=config,
         ticker='',
         position=Position.NEUTRAL,
-        conclusions=[],
-        current_conclusion_idx=0,
-        current_conclusion=None,
+        conclusion=None,
         raw_nodes=[],
         raw_edges=[],
         narrative_graph=None,
         prediction=None,
-        narrative_items=[],
+        narrative_item=None,
         errors=[],
         messages=[]
     )
@@ -452,36 +412,41 @@ def extract_narratives(
     print("="*60)
     
     try:
-        # Set recursion_limit high enough for multiple conclusions
-        # Each conclusion takes ~7 steps, plus 3 initial steps
-        # Formula: 3 + (7 * expected_conclusions) + buffer
-        # For safety, use 100 to handle up to ~14 conclusions
-        final_state = graph.invoke(initial_state, {"recursion_limit": 100})
+        # Linear workflow only needs 7 steps
+        final_state = graph.invoke(initial_state, {"recursion_limit": 20})
         
         # Print summary
         print("\n" + "="*60)
         print("EXTRACTION COMPLETE")
         print("="*60)
-        print(f"Narratives extracted: {len(final_state.get('narrative_items', []))}")
+        
+        narrative_item = final_state.get('narrative_item')
+        
+        if narrative_item:
+            print(f"✅ Successfully extracted narrative")
+            print(f"   Ticker: {narrative_item.ticker}")
+            print(f"   Position: {narrative_item.position.value}")
+            print(f"   Convergence: {narrative_item.narrative_graph.convergence_score:.3f}")
+            print(f"   Nodes: {len(narrative_item.narrative_graph.nodes)}")
+            print(f"   Edges: {len(narrative_item.narrative_graph.edges)}")
+        else:
+            print(f"❌ Failed to extract narrative")
         
         if final_state.get('errors'):
-            print(f"Errors encountered: {len(final_state['errors'])}")
+            print(f"\n⚠️  Warnings/Errors: {len(final_state['errors'])}")
             for error in final_state['errors']:
                 print(f"  - {error}")
         
         print("="*60 + "\n")
         
-        narrative_items = final_state.get('narrative_items', [])
-        
         # Auto-save to JSON if requested
-        if save_json and narrative_items:
+        if save_json and narrative_item:
             save_narratives_to_json(
-                narrative_items, 
-                output_path=json_output_path,
-                separate_files=separate_files
+                [narrative_item],  # Wrap in list for compatibility
+                output_path=json_output_path
             )
         
-        return narrative_items
+        return narrative_item
         
     except Exception as e:
         print(f"\n❌ Extraction failed: {str(e)}\n")
@@ -492,61 +457,33 @@ def extract_narratives(
 # HELPER FUNCTIONS
 # ============================================================================
 
-def extract_single_narrative(
-    source_text: str,
-    conclusion_text: str = None
-) -> NarrativeItem:
-    """
-    Extract a single narrative for a specific conclusion
-    
-    Useful when you know there's only one conclusion or want to target
-    a specific conclusion.
-    
-    Args:
-        source_text: The financial analysis text
-        conclusion_text: Optional specific conclusion to extract for
-        
-    Returns:
-        Single NarrativeItem
-    """
-    items = extract_narratives(source_text)
-    
-    if not items:
-        raise ValueError("No narratives could be extracted from the text")
-    
-    if conclusion_text:
-        # Find item with matching conclusion
-        for item in items:
-            conclusion = item.narrative_graph.get_node(
-                item.narrative_graph.conclusion_id
-            )
-            if conclusion and conclusion_text.lower() in conclusion.content.lower():
-                return item
-        raise ValueError(f"No narrative found for conclusion: {conclusion_text}")
-    
-    return items[0]
-
-
-def batch_extract_narratives(texts: List[str]) -> List[List[NarrativeItem]]:
+def batch_extract_narratives(
+    texts: List[str],
+    config: ExtractionConfig = None
+) -> List[Optional[NarrativeItem]]:
     """
     Extract narratives from multiple texts in batch
     
     Args:
         texts: List of financial analysis texts
+        config: Extraction configuration (applied to all texts)
         
     Returns:
-        List of lists of NarrativeItems (one list per input text)
+        List of NarrativeItems (one per input text, None if extraction failed)
     """
+    if config is None:
+        config = ExtractionConfig()
+    
     results = []
     
     for i, text in enumerate(texts):
         print(f"\nProcessing text {i+1}/{len(texts)}...")
         try:
-            items = extract_narratives(text)
-            results.append(items)
+            item = extract_narratives(text, config=config)
+            results.append(item)
         except Exception as e:
             print(f"Error processing text {i+1}: {e}")
-            results.append([])
+            results.append(None)
     
     return results
 

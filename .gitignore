@@ -4,3 +4,4 @@ ExtractionAgent/__init__.py
 /ExtractionAgent/__pycache__
 /__pycache__
 /output/individual
+*.pyc

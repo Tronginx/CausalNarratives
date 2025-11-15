@@ -33,6 +33,9 @@ class Node(BaseModel):
     id: str = Field(..., description="Unique identifier for the node")
     content: str = Field(..., description="The actual text content of this node")
     node_type: NodeType = Field(..., description="Type of node (fact, event, opinion, conclusion)")
+    # Metadata for conclusion nodes
+    asset: Optional[str] = Field(None, description="Asset/ticker for conclusion nodes")
+    position: Optional[Position] = Field(None, description="Position (long/short) for conclusion nodes")
 
 class Edge(BaseModel):
     """Represents a causal or logical relationship between two nodes"""
@@ -87,6 +90,16 @@ class ActualOutcome(BaseModel):
     percent_change: float = Field(..., description="Actual % change in price")
     verification_date: datetime = Field(..., description="When the outcome was verified")
     prediction_correct: bool = Field(..., description="Whether the prediction was correct")
+
+
+class ExtractionConfig(BaseModel):
+    """Configuration for narrative extraction with safety limits"""
+    enable_safety_limits: bool = Field(default=True, description="Enable safety limit checks")
+    max_nodes_per_narrative: int = Field(default=50, description="Maximum nodes per narrative")
+    max_edges_per_narrative: int = Field(default=100, description="Maximum edges per narrative")
+    max_processing_time_seconds: int = Field(default=300, description="Maximum processing time in seconds")
+    min_convergence_score: float = Field(default=0.3, ge=0.0, le=1.0, description="Minimum acceptable convergence score")
+    max_path_depth: int = Field(default=10, description="Maximum path depth for convergence calculation")
 
 
 class NarrativeItem(BaseModel):

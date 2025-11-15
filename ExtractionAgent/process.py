@@ -18,7 +18,7 @@ from datetime import datetime
 
 from .data_types import (
     Node, Edge, NarrativeGraph, NodeType, 
-    RelationshipType, NarrativeItem, Position, Prediction
+    RelationshipType, NarrativeItem, Position, Prediction, ExtractionConfig
 )
 from .chains import NarrativeChains
 
@@ -46,45 +46,65 @@ def process_extract_metadata(source_text: str) -> Tuple[str, Position, Optional[
         return 'UNKNOWN', Position.NEUTRAL, f"Metadata extraction error: {str(e)}"
 
 
-def process_extract_conclusions(source_text: str) -> Tuple[List[Node], Optional[str]]:
+def process_extract_conclusion(
+    source_text: str,
+    ticker: str,
+    position: Position
+) -> Tuple[Optional[Node], Optional[str]]:
     """
-    Identify ALL conclusion statements in the text
+    Identify the single main conclusion/investment thesis in the text
     
     Args:
         source_text: The financial analysis text
+        ticker: Stock ticker symbol
+        position: Investment position
         
     Returns:
-        Tuple of (conclusions_list, error_message)
+        Tuple of (conclusion_node, error_message)
     """
     chains = NarrativeChains()
     
     try:
-        conclusions = chains.extract_conclusions(source_text)
+        conclusion = chains.extract_conclusion(source_text, ticker, position)
         
-        if not conclusions:
-            return [], "No conclusions found in text"
+        if not conclusion:
+            return None, "No conclusion found in text"
         
-        return conclusions, None
+        return conclusion, None
     except Exception as e:
-        return [], f"Conclusion extraction error: {str(e)}"
+        return None, f"Conclusion extraction error: {str(e)}"
 
 
-def process_extract_nodes(source_text: str, conclusion: Node) -> Tuple[List[Node], Optional[str]]:
+def process_extract_nodes(
+    source_text: str,
+    conclusion: Node,
+    config: ExtractionConfig = None
+) -> Tuple[List[Node], Optional[str]]:
     """
     Extract nodes (facts, events, opinions, assumptions) related to a conclusion
     
     Args:
         source_text: The financial analysis text
         conclusion: The conclusion node
+        config: Extraction configuration with safety limits
         
     Returns:
         Tuple of (all_nodes_including_conclusion, error_message)
     """
+    if config is None:
+        config = ExtractionConfig()
+    
     chains = NarrativeChains()
     
     try:
         # Extract supporting nodes
         nodes = chains.extract_nodes(source_text, conclusion)
+        
+        # Apply safety limits if enabled
+        if config.enable_safety_limits and len(nodes) > config.max_nodes_per_narrative:
+            warning = f"⚠️  Node count ({len(nodes)}) exceeds limit ({config.max_nodes_per_narrative}). Truncating."
+            print(warning)
+            nodes = nodes[:config.max_nodes_per_narrative]
         
         # Add the conclusion to the node list
         all_nodes = nodes + [conclusion]
@@ -97,7 +117,8 @@ def process_extract_nodes(source_text: str, conclusion: Node) -> Tuple[List[Node
 def process_extract_edges(
     nodes: List[Node],
     conclusion: Node,
-    source_text: str
+    source_text: str,
+    config: ExtractionConfig = None
 ) -> Tuple[List[Edge], Optional[str]]:
     """
     Extract causal and logical relationships between nodes
@@ -106,14 +127,25 @@ def process_extract_edges(
         nodes: All nodes including the conclusion
         conclusion: The target conclusion node
         source_text: The financial analysis text
+        config: Extraction configuration with safety limits
         
     Returns:
         Tuple of (edges_list, error_message)
     """
+    if config is None:
+        config = ExtractionConfig()
+    
     chains = NarrativeChains()
     
     try:
         edges = chains.extract_edges(nodes, conclusion, source_text)
+        
+        # Apply safety limits if enabled
+        if config.enable_safety_limits and len(edges) > config.max_edges_per_narrative:
+            warning = f"⚠️  Edge count ({len(edges)}) exceeds limit ({config.max_edges_per_narrative}). Truncating."
+            print(warning)
+            edges = edges[:config.max_edges_per_narrative]
+        
         return edges, None
     except Exception as e:
         return [], f"Edge extraction error: {str(e)}"
@@ -122,7 +154,8 @@ def process_extract_edges(
 def process_build_narrative_graph(
     nodes: List[Node],
     edges: List[Edge],
-    conclusion: Node
+    conclusion: Node,
+    config: ExtractionConfig = None
 ) -> Tuple[Optional[NarrativeGraph], List[str]]:
     """
     Build and validate the NarrativeGraph with calculated metrics
@@ -131,10 +164,14 @@ def process_build_narrative_graph(
         nodes: All nodes
         edges: All edges
         conclusion: The conclusion node
+        config: Extraction configuration with safety limits
         
     Returns:
         Tuple of (narrative_graph, error_messages)
     """
+    if config is None:
+        config = ExtractionConfig()
+    
     try:
         # Validate graph
         is_valid, errors = validate_graph(nodes, edges)
@@ -145,7 +182,13 @@ def process_build_narrative_graph(
         # Create narrative graph with metrics
         graph = create_narrative_graph(nodes, edges, conclusion.id)
         
-        return graph, []
+        # Check convergence score if safety limits enabled
+        if config.enable_safety_limits and graph.convergence_score < config.min_convergence_score:
+            warning = f"⚠️  Low convergence score ({graph.convergence_score:.3f}) below threshold ({config.min_convergence_score})"
+            print(warning)
+            errors.append(warning)
+        
+        return graph, errors
     except Exception as e:
         return None, [f"Graph building error: {str(e)}"]
 

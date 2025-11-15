@@ -23,9 +23,9 @@ class MetadataOutput(BaseModel):
     position: str = Field(..., description="Investment stance: long, short, or neutral")
 
 
-class ConclusionList(BaseModel):
-    """Schema for conclusion extraction"""
-    conclusions: List[Node] = Field(..., description="List of all conclusion nodes found in text")
+class ConclusionOutput(BaseModel):
+    """Schema for single main conclusion extraction"""
+    conclusion: Node = Field(..., description="The single main conclusion/investment thesis")
 
 
 class NodeList(BaseModel):
@@ -59,55 +59,75 @@ Text to analyze:
 Extract the ticker and position from this text."""
 
 
-EXTRACT_CONCLUSIONS_PROMPT = """You are analyzing a financial analysis to identify CONCLUSION statements.
+EXTRACT_CONCLUSIONS_PROMPT = """You are analyzing a financial analysis to identify the SINGLE MAIN investment thesis.
 
-A CONCLUSION is the main claim, thesis, or recommendation the author is making. Examples:
-- "TSMC stock is undervalued and presents a strong buying opportunity"
-- "The company will likely underperform the market"
-- "Investors should avoid this stock"
-- "This is a good long-term hold"
+Your task: Extract the PRIMARY conclusion that represents the overall trade recommendation.
 
-NOT conclusions (these are facts or opinions):
+A main conclusion is the overarching investment recommendation that encompasses the author's thesis. Examples:
+- "I recommend buying TSMC stock" (overall thesis)
+- "TSMC is a Strong Buy at current prices" (main recommendation)
+- "Investors should go long TSMC" (primary thesis)
+- "The stock should be avoided" (bearish thesis)
+
+NOT main conclusions (these are supporting arguments):
+- "TSMC is undervalued" (this SUPPORTS buying, but isn't the final recommendation)
 - "Revenue increased 20%" (this is a fact)
-- "The market is volatile" (too general)
-- "Management is competent" (opinion, but not a final recommendation)
+- "Management is competent" (opinion supporting a broader thesis)
 
-Important: 
-- Each conclusion will be analyzed separately
-- Extract ALL distinct conclusions in the text
-- Use exact quotes or paraphrases from the text
-- Assign each a unique ID (e.g., "conclusion_1", "conclusion_2")
+Guidelines:
+1. Extract ONE main conclusion that represents the author's overall investment recommendation
+2. The conclusion should align with the document's primary position (long/short/neutral)
+3. Ignore sub-arguments or intermediate points - focus on the ultimate recommendation
+4. Use the author's own words when possible
+5. If multiple trade ideas exist (rare), extract only the PRIMARY one
 
 Text to analyze:
 {source_text}
 
-Extract all conclusion statements as Node objects with:
-- id: unique identifier (e.g., "conclusion_1")
-- content: the conclusion statement text
-- node_type: "conclusion" """
+Ticker: {ticker}
+Position: {position}
+
+Extract the SINGLE main conclusion as a Node object with:
+- id: "conclusion_main"
+- content: the primary investment thesis/recommendation
+- node_type: "conclusion"
+- asset: the ticker symbol
+- position: the investment position (long/short/neutral)"""
 
 
-EXTRACT_NODES_PROMPT = """You are analyzing a financial text to extract nodes (facts, events, opinions, assumptions) that relate to a specific conclusion.
+EXTRACT_NODES_PROMPT = """You are extracting ALL relevant information from a financial analysis to build a comprehensive causal narrative graph.
 
-Current conclusion being analyzed: "{conclusion_content}"
+Main conclusion: "{conclusion_content}"
 
 Node type definitions:
 - **FACT**: Concrete, verifiable facts (e.g., "Q3 revenue increased 20%", "P/E ratio is 15")
 - **EVENT**: Specific events that happened or will happen (e.g., "CEO resigned", "Product launch scheduled")
-- **OPINION**: Interpretations, judgments, or analysis (e.g., "Management is competent", "Valuation seems high")
+- **OPINION**: Interpretations, judgments, or analysis (e.g., "Management is competent", "Valuation seems high", intermediate conclusions)
 - **ASSUMPTION**: Underlying assumptions in the argument (e.g., "Market will remain stable", "Growth will continue")
 
 Instructions:
-1. Extract ALL nodes from the text that support, relate to, or connect to the conclusion: "{conclusion_content}"
-2. DO NOT extract the conclusion itself (it's already included)
-3. Be specific and granular - extract individual facts rather than combining them
-4. Include nodes that might contradict if present
+1. Extract ALL important nodes from the ENTIRE text, including:
+   - Facts: Verifiable data, metrics, financial results, market data
+   - Events: Things that happened or will happen
+   - Opinions: Author's views, analyst ratings, interpretations, intermediate conclusions
+   - Assumptions: Underlying beliefs, conditions, or market expectations
+
+2. Be COMPREHENSIVE - capture the full reasoning structure:
+   - Include nodes that directly support the main conclusion
+   - Include intermediate arguments and sub-conclusions (as opinion nodes)
+   - Include contextual information and background
+   - Include contradictory information or risks if mentioned
+   
+3. DO NOT extract the main conclusion itself (it's already included as id="conclusion_main")
+
+4. Be specific and granular - extract individual facts rather than combining them
+
 5. Assign unique IDs (e.g., "fact_1", "event_1", "opinion_1", "assumption_1")
 
 Text to analyze:
 {source_text}
 
-Extract nodes as Node objects with:
+Extract all relevant nodes as Node objects with:
 - id: unique identifier
 - content: the node text content
 - node_type: one of [fact, event, opinion, assumption]"""
@@ -181,7 +201,7 @@ Extract as Prediction object."""
 class NarrativeChains:
     """Collection of LLM chains for narrative extraction"""
     
-    def __init__(self, model: str = "gpt-4o", temperature: float = 0):
+    def __init__(self, model: str = "gpt-5", temperature: float = 0):
         """
         Initialize chains with specified model
         
@@ -214,26 +234,35 @@ class NarrativeChains:
         
         return result
     
-    def extract_conclusions(self, source_text: str) -> List[Node]:
+    def extract_conclusion(self, source_text: str, ticker: str, position: Position) -> Node:
         """
-        Extract all conclusion statements from text
+        Extract the single main conclusion/investment thesis from text
         
         Args:
             source_text: The financial analysis text
+            ticker: Stock ticker symbol
+            position: Investment position (long/short/neutral)
             
         Returns:
-            List of Node objects with node_type=conclusion
+            Single Node object with node_type=conclusion
         """
-        prompt = EXTRACT_CONCLUSIONS_PROMPT.format(source_text=source_text)
+        prompt = EXTRACT_CONCLUSIONS_PROMPT.format(
+            source_text=source_text,
+            ticker=ticker,
+            position=position.value
+        )
         
-        chain = self.llm.with_structured_output(ConclusionList)
+        chain = self.llm.with_structured_output(ConclusionOutput)
         result = chain.invoke(prompt)
         
-        # Ensure all nodes are marked as conclusions
-        for node in result.conclusions:
-            node.node_type = NodeType.CONCLUSION
+        # Ensure it's marked as conclusion and has metadata
+        result.conclusion.node_type = NodeType.CONCLUSION
+        if not result.conclusion.asset:
+            result.conclusion.asset = ticker
+        if not result.conclusion.position:
+            result.conclusion.position = position
         
-        return result.conclusions
+        return result.conclusion
     
     def extract_nodes(self, source_text: str, conclusion: Node) -> List[Node]:
         """

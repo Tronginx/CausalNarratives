@@ -22,12 +22,12 @@ from .data_types import (
     RelationshipType,
     Position,
     Prediction,
-    ActualOutcome
+    ActualOutcome,
+    ExtractionConfig
 )
 
 from .graph import (
     extract_narratives,
-    extract_single_narrative,
     batch_extract_narratives,
     save_narratives_to_json,
     load_narratives_from_json
@@ -47,7 +47,6 @@ __version__ = "0.1.0"
 __all__ = [
     # Main functions
     "extract_narratives",
-    "extract_single_narrative",
     "batch_extract_narratives",
     
     # JSON export/import
@@ -64,6 +63,7 @@ __all__ = [
     "Position",
     "Prediction",
     "ActualOutcome",
+    "ExtractionConfig",
     
     # Chains
     "NarrativeChains",
