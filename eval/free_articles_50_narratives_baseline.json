@@ -1,0 +1,556 @@
+{
+  "extraction_date": "2025-11-27",
+  "num_narratives": 50,
+  "narratives": [
+    {
+      "ticker": "NVDA",
+      "position": "long",
+      "created_at": "2024-11-10",
+      "source_text": "Should You Buy Nvidia Stock After It Notched 200% Gains in 2024?\n\nReason: AI/data-center momentum; valuation debate",
+      "source_url": "https://www.fool.com/investing/2024/11/10/should-you-buy-nvidia-stock-after-it-notched-200-g/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "NVDA",
+      "position": "long",
+      "created_at": "2024-12-29",
+      "source_text": "Should You Buy Nvidia Stock Before 2025?\n\nReason: Continued hyperscaler demand; product roadmap",
+      "source_url": "https://www.fool.com/investing/2024/12/29/should-you-buy-nvidia-stock-before-2025/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "NVDA",
+      "position": "long",
+      "created_at": "2025-05-10",
+      "source_text": "3 Reasons to Buy Nvidia Stock Like There's No Tomorrow\n\nReason: Accelerating growth; hyperscaler spend",
+      "source_url": "https://www.fool.com/investing/2025/05/10/3-reasons-to-buy-nvidia-stock-like-theres-no-tomor/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "NVDA",
+      "position": "long",
+      "created_at": "2025-06-18",
+      "source_text": "History Says Now Is an Excellent Time to Buy Nvidia Stock\n\nReason: Historical patterns; strong fundamentals",
+      "source_url": "https://www.fool.com/investing/2025/06/18/history-says-now-is-an-excellent-time-to-buy-nvidi/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "AAPL",
+      "position": "long",
+      "created_at": "2024-09-24",
+      "source_text": "Is It Too Late to Buy Apple Stock?\n\nReason: Ecosystem lock‑in; services growth",
+      "source_url": "https://www.fool.com/investing/2024/09/24/is-it-too-late-to-buy-apple-stock/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "AAPL",
+      "position": "long",
+      "created_at": "2024-11-23",
+      "source_text": "Could Buying Apple Stock Today Set You Up for Life?\n\nReason: Cash generation; long‑term moat",
+      "source_url": "https://www.fool.com/investing/2024/11/23/could-buying-apple-stock-today-set-you-up-for-life/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "AAPL",
+      "position": "neutral",
+      "created_at": "2024-12-23",
+      "source_text": "Where Will Apple Stock Be in 1 Year?\n\nReason: Balanced catalysts/risks; 1‑year outlook",
+      "source_url": "https://www.fool.com/investing/2024/12/23/where-will-apple-stock-be-in-1-year/",
+      "prediction": {
+        "direction": "flat",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "AAPL/AMZN",
+      "position": "long",
+      "created_at": "2025-10-17",
+      "source_text": "Better Stock to Buy Right Now: Apple vs. Amazon\n\nReason: Compares fundamentals; selects a winner",
+      "source_url": "https://www.fool.com/investing/2025/10/17/best-stock-to-buy-right-now-apple-vs-amazon/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "NVDA",
+      "position": "long",
+      "created_at": "2024-02-01",
+      "source_text": "Can Nvidia Hit $1,000 in 2024? The Crazy Answer.\n\nReason: AI demand; valuation scenarios",
+      "source_url": "https://investorplace.com/2024/02/can-nvidia-hit-1000-in-2024-the-crazy-answer/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "NVDA",
+      "position": "long",
+      "created_at": "2024-02-01",
+      "source_text": "3 Reasons Nvidia's Stock Is Still a Must‑Buy AI Powerhouse in 2024\n\nReason: AI trend; growth trajectory",
+      "source_url": "https://investorplace.com/2024/02/3-reasons-nvidias-stock-is-still-a-must-buy-ai-powerhouse-in-2024/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "NVDA",
+      "position": "long",
+      "created_at": "2024-01-01",
+      "source_text": "NVDA Stock Prediction: Why Nvidia Will Remain the Chip King in 2024 and Beyond\n\nReason: Accelerator dominance; revenue growth",
+      "source_url": "https://investorplace.com/2024/01/nvda-stock-prediction-why-nvidia-will-remain-the-chip-king-in-2024-and-beyond/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "NVDA",
+      "position": "long",
+      "created_at": "2024-07-01",
+      "source_text": "Forget the Dip: Why Nvidia Stock Could Skyrocket Further in 2024\n\nReason: Upgrades; AI chip demand",
+      "source_url": "https://investorplace.com/2024/07/forget-the-dip-why-nvidia-stock-could-skyrocket-further-in-2024/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "NVDA",
+      "position": "long",
+      "created_at": "2024-08-01",
+      "source_text": "Is Nvidia (NVDA) Stock a Buy Ahead of Earnings?\n\nReason: EPS growth; justified valuation",
+      "source_url": "https://investorplace.com/2024/08/is-nvidia-nvda-stock-a-buy-ahead-of-earnings/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "NVDA",
+      "position": "long",
+      "created_at": "2024-07-01",
+      "source_text": "NVDA Stock Forecast: Will Nvidia Become a $4 Trillion Company This Year?\n\nReason: Market‑cap path; AI GPU economics",
+      "source_url": "https://investorplace.com/2024/07/nvda-stock-forecast-will-nvidia-become-a-4-trillion-company-this-year/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "GOOGL",
+      "position": "long",
+      "created_at": "2024-08-01",
+      "source_text": "JPMorgan, KeyBanc Lift Alphabet Stock Price Targets Ahead of Q3 Earnings\n\nReason: Strong Buy consensus; raised targets",
+      "source_url": "https://www.tipranks.com/news/jpmorgan-keybanc-lift-alphabet-stock-googl-price-target-ahead-of-q3-earnings",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "AMZN/GOOGL",
+      "position": "long",
+      "created_at": "2024-08-01",
+      "source_text": "Alphabet and Amazon: Analyst Selects the Best Magnificent‑7 Stocks to Buy\n\nReason: Outperform rating; 12‑month PT",
+      "source_url": "https://www.tipranks.com/news/alphabet-and-amazon-lloyd-walmsley-selects-the-best-magnificent-7-stocks-to-buy",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "GOOGL",
+      "position": "long",
+      "created_at": "2024-08-01",
+      "source_text": "'Don't Doubt the Core Strengths,' Says Goldman Sachs About Alphabet\n\nReason: Buy rating; target cited",
+      "source_url": "https://www.tipranks.com/news/dont-doubt-the-core-strengths-says-goldman-sachs-about-alphabet-stock-googl",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "GOOGL",
+      "position": "long",
+      "created_at": "2024-08-01",
+      "source_text": "Alphabet Stock Hits Top Gear as Gemini Lingers in 2nd\n\nReason: Strong Buy consensus; targets",
+      "source_url": "https://www.tipranks.com/news/alphabet-stock-googl-hits-top-gear-as-gemini-lingers-in-2nd",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "GOOGL",
+      "position": "long",
+      "created_at": "2024-08-01",
+      "source_text": "More AI‑driven growth ahead, says Citi about Alphabet\n\nReason: Buy rating; consensus outlook",
+      "source_url": "https://www.tipranks.com/news/article/more-ai-driven-growth-ahead-says-citi-about-alphabet-stock",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "TSLA",
+      "position": "neutral",
+      "created_at": "2024-07-01",
+      "source_text": "Tesla Stock Analysis: Is Now the Time to Buy, Sell or Hold?\n\nReason: Mixed 2024; momentum vs. valuation",
+      "source_url": "https://investorplace.com/2024/07/tesla-stock-analysis-is-now-the-time-to-buy-sell-or-hold/",
+      "prediction": {
+        "direction": "flat",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "TSLA",
+      "position": "long",
+      "created_at": "2024-08-01",
+      "source_text": "TSLA Stock Analysis: The Bull and Bear Thesis for Tesla Investors\n\nReason: Cheaper EVs; brand momentum",
+      "source_url": "https://investorplace.com/2024/08/tsla-stock-analysis-the-bull-and-bear-thesis-for-tesla-investors/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "TSLA",
+      "position": "short",
+      "created_at": "2024-08-01",
+      "source_text": "Tesla Stock Is Still Overvalued Despite Massive 2024 Selloff\n\nReason: Overvaluation; bearish PT highlight",
+      "source_url": "https://investorplace.com/2024/08/tsla-warning-tesla-stock-is-still-overvalued-despite-massive-2024-selloff/",
+      "prediction": {
+        "direction": "down",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "AMD",
+      "position": "short",
+      "created_at": "2024-03-01",
+      "source_text": "AMD's 2024 Reckoning: Why Wall Street's Expectations Are a Ticking Time Bomb\n\nReason: AI chip expectations at risk",
+      "source_url": "https://investorplace.com/2024/03/amds-2024-reckoning-why-wall-streets-expectations-are-a-ticking-time-bomb/",
+      "prediction": {
+        "direction": "down",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "AMD",
+      "position": "long",
+      "created_at": "2024-07-01",
+      "source_text": "AMD Stock Could Pop After Its Q2 Earnings Report on Tuesday\n\nReason: Raised PTs; Q2 catalyst",
+      "source_url": "https://investorplace.com/2024/07/amd-stock-could-pop-after-its-q2-earnings-report-on-tuesday/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "AMD",
+      "position": "long",
+      "created_at": "2024-07-01",
+      "source_text": "Pounce Now: It's Time to Buy AMD Stock\n\nReason: Earnings momentum; analyst upgrades",
+      "source_url": "https://investorplace.com/2024/07/pounce-now-its-time-to-buy-amd-stock/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "NVDA",
+      "position": "long",
+      "created_at": "2024-04-01",
+      "source_text": "NVDA Is Unstoppable in the AI Race. Buy Nvidia Stock NOW.\n\nReason: Sustained AI leadership",
+      "source_url": "https://investorplace.com/2024/04/nvda-is-unstoppable-in-the-ai-race-buy-nvidia-stock-now/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "NVDA (+list)",
+      "position": "long",
+      "created_at": "2024-08-01",
+      "source_text": "7 A‑Rated Stocks for Your August 2024 Buy List\n\nReason: Pre‑earnings setup; strong buy",
+      "source_url": "https://investorplace.com/market360/2024/08/7-a-rated-stocks-for-your-august-2024-buy-list/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "NVDA",
+      "position": "long",
+      "created_at": "2024-12-22",
+      "source_text": "Is Nvidia Stock a Buy?\n\nReason: Growth durability; AI catalysts",
+      "source_url": "https://www.fool.com/investing/2024/12/22/is-nvidia-stock-a-buy/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "NVDA",
+      "position": "long",
+      "created_at": "2025-10-27",
+      "source_text": "Where Will Nvidia Stock Be in 1 Year?\n\nReason: Forward 1‑year outlook",
+      "source_url": "https://www.fool.com/investing/2025/10/27/where-will-nvidia-stock-be-in-1-year/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "AMZN",
+      "position": "long",
+      "created_at": "2024-11-24",
+      "source_text": "3 Reasons to Buy Amazon Stock Like There's No Tomorrow\n\nReason: Growth drivers; retail efficiency",
+      "source_url": "https://www.fool.com/investing/2024/11/24/the-bull-market-growing-3-reasons-buy-amazon/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "AAPL",
+      "position": "neutral",
+      "created_at": "2024-11-06",
+      "source_text": "Is Apple Stock a Buy, Sell, or Hold in 2025?\n\nReason: Valuation vs. growth; 2025 framing",
+      "source_url": "https://www.fool.com/investing/2024/11/06/is-apple-stock-a-buy-sell-or-hold-in-2025/",
+      "prediction": {
+        "direction": "flat",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "GOOGL",
+      "position": "long",
+      "created_at": "2024-08-01",
+      "source_text": "Why Alphabet's Valuation Hints at Stock Rebound\n\nReason: Buy consensus; PT upside",
+      "source_url": "https://www.tipranks.com/news/why-alphabets-googl-valuation-hints-at-stock-rebound",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "NVDA",
+      "position": "long",
+      "created_at": "2024-08-01",
+      "source_text": "NVIDIA Skyrockets 171% in 2024: Will the Stock Outshine the Market in 2025?\n\nReason: Momentum; leadership; outlook",
+      "source_url": "https://finance.yahoo.com/news/nvidia-skyrockets-171-2024-stock-122400412.html",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "AMZN",
+      "position": "long",
+      "created_at": "2025-08-07",
+      "source_text": "Is Amazon Stock a Long‑Term Buy?\n\nReason: Q2 2025 results; long‑term thesis",
+      "source_url": "https://www.fool.com/investing/2025/08/07/is-amazon-stock-a-long-term-buy/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "NVDA",
+      "position": "long",
+      "created_at": "2025-10-24",
+      "source_text": "Prediction: This Will Be Nvidia's Stock Price in 2026\n\nReason: Price target scenario; growth path",
+      "source_url": "https://www.fool.com/investing/2025/10/24/prediction-this-will-be-nvidias-stock-price-in-202/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "AAPL",
+      "position": "short",
+      "created_at": "2024-07-01",
+      "source_text": "Apple Stock Is Overvalued. Sell Now Before It's Too Late.\n\nReason: Overvaluation; wait for pullback",
+      "source_url": "https://investorplace.com/2024/07/apple-stock-is-overvalued-sell-now-before-its-too-late/",
+      "prediction": {
+        "direction": "down",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "NVDA",
+      "position": "long",
+      "created_at": "2024-05-01",
+      "source_text": "NVDA on Watch: Is Nvidia Stock a Buy Ahead of Its May 22 Earnings Report?\n\nReason: Pre‑earnings setup; upside scenario",
+      "source_url": "https://investorplace.com/2024/05/nvda-on-watch-is-nvidia-stock-a-buy-ahead-of-its-may-22-earnings-report/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "NVDA / GOOGL / AMD",
+      "position": "long",
+      "created_at": "2025-10-01",
+      "source_text": "5 Profit Forces in AI to Make Money and Avoid the Bust\n\nReason: Structural AI tailwinds; profitability consolidation; avoiding overhyped segments",
+      "source_url": "https://investorplace.com/hypergrowthinvesting/2025/10/5-profit-forces-in-ai-to-make-money-and-avoid-the-bust/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "GOOGL",
+      "position": "long",
+      "created_at": "2024-05-01",
+      "source_text": "Go for GOOG: Why Alphabet Stock Is Still a Must-Buy in 2024\n\nReason: AI & Cloud momentum; attractive valuation",
+      "source_url": "https://investorplace.com/2024/05/go-for-goog-why-alphabet-stock-is-still-a-must-buy-in-2024/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "META",
+      "position": "long",
+      "created_at": "2024-01-01",
+      "source_text": "Why META Stock May Be the Biggest Tech Outperformer in 2024\n\nReason: Efficiency gains; AI ad performance",
+      "source_url": "https://investorplace.com/2024/01/why-meta-stock-may-be-the-biggest-tech-outperformer-in-2024/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "DIS",
+      "position": "long",
+      "created_at": "2024-08-01",
+      "source_text": "The 3 Best Streaming Stocks to Buy in August 2024\n\nReason: Streaming profitability milestone; parks capex",
+      "source_url": "https://investorplace.com/2024/08/the-3-best-streaming-stocks-to-buy-in-august-2024/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "AVGO",
+      "position": "long",
+      "created_at": "2024-08-01",
+      "source_text": "AVGO Buy Alert: Broadcom Stock Is Poised to Benefit From the Ongoing AI Boom\n\nReason: AI accelerator demand; attractive valuation after pullback",
+      "source_url": "https://investorplace.com/2024/08/avgo-buy-alert-broadcom-stock-is-poised-to-benefit-from-the-ongoing-ai-boom/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "CRM",
+      "position": "long",
+      "created_at": "2024-01-01",
+      "source_text": "Salesforce Buy Alert: Why CRM Stock Will Shine in 2024\n\nReason: Margin expansion; AI product suite",
+      "source_url": "https://investorplace.com/2024/01/salesforce-buy-alert-why-crm-stock-will-shine-in-2024/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "PYPL",
+      "position": "long",
+      "created_at": "2024-03-01",
+      "source_text": "PayPal’s Comeback Story: Why PYPL Stock Is a Bargain Buy in 2024\n\nReason: New CEO initiatives; AI-driven features; valuation",
+      "source_url": "https://investorplace.com/2024/03/paypals-comeback-story-why-pypl-stock-is-a-bargain-buy-in-2024/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "SHOP",
+      "position": "long",
+      "created_at": "2024-08-01",
+      "source_text": "Shopify News: Why Is SHOP Stock Up 23% Today?\n\nReason: Q2 2024 earnings beat; growth reacceleration",
+      "source_url": "https://investorplace.com/2024/08/shopify-news-why-is-shop-stock-up-23-today/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "UBER",
+      "position": "long",
+      "created_at": "2024-07-01",
+      "source_text": "The 3 Most Undervalued Growth Stocks to Buy in July 2024\n\nReason: Valuation vs. growth; expansion in delivery",
+      "source_url": "https://investorplace.com/2024/07/the-3-most-undervalued-growth-stocks-to-buy-in-july-2024/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "PLTR",
+      "position": "long",
+      "created_at": "2024-08-01",
+      "source_text": "Palantir Stock Issues Strong Buy Signal as AI-Driven Growth Accelerates in Q2\n\nReason: Raised guidance; commercial acceleration",
+      "source_url": "https://investorplace.com/2024/08/palantir-stock-issues-strong-buy-signal-as-ai-driven-growth-accelerates-in-q2/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "COIN",
+      "position": "long",
+      "created_at": "2024-01-01",
+      "source_text": "Coinbase Outlook 2024: Should You Buy COIN Stock?\n\nReason: Crypto cycle tailwind; trading volume sensitivity",
+      "source_url": "https://investorplace.com/2024/01/coinbase-outlook-2024-should-you-buy-coin-stock/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "SQ",
+      "position": "long",
+      "created_at": "2024-07-01",
+      "source_text": "The 3 Best Affordable Payment Stocks to Buy Now\n\nReason: Valuation reset; operating leverage potential",
+      "source_url": "https://investorplace.com/2024/07/the-3-best-affordable-payment-stocks-to-buy-now/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    },
+    {
+      "ticker": "ABNB",
+      "position": "long",
+      "created_at": "2024-03-01",
+      "source_text": "3 Overlooked Travel Stocks Set to Rebound in 2024\n\nReason: Travel rebound; buyback plan; cash generation",
+      "source_url": "https://investorplace.com/2024/03/3-overlooked-travel-stocks-set-to-rebound-in-2024/",
+      "prediction": {
+        "direction": "up",
+        "time_horizon_days": 63
+      }
+    }
+  ]
+}
